@@ -1,0 +1,7 @@
+tensorflow
+streamlit
+pillow
+numpy
+pandas
+plotly
+protobuf

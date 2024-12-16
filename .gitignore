@@ -1,0 +1,23 @@
+ python files *.pyc
+__pycache__/
+venv/
+env/
+
+# Model files
+*.h5
+*.keras
+*.pkl
+
+# IDE
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+
+# Streamlit
+.streamlit/
+
+# Environment
+.env
+.env.local
