@@ -3,10 +3,7 @@ __pycache__/
 venv/
 env/
 
-# Model files
-*.h5
-*.keras
-*.pkl
+
 
 # IDE
 .vscode/
