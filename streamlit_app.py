@@ -4,6 +4,8 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import requests
+import os
 
 # Set page configuration
 st.set_page_config(
@@ -75,10 +77,28 @@ def set_custom_background():
 # Set the custom background
 set_custom_background()
 
+def download_model():
+    """Download the model file if not already available."""
+    model_url = "https://drive.google.com/uc?id=1NgcBhuh5JltySqIjS4JQ87uR9fNsSrfG"
+    model_path = "models/best_efficientnet_final.keras"
+    if not os.path.exists(model_path):
+        try:
+            with st.spinner("Downloading model..."):
+                response = requests.get(model_url)
+                response.raise_for_status()
+                os.makedirs("models", exist_ok=True)
+                with open(model_path, "wb") as f:
+                    f.write(response.content)
+            st.success("Model downloaded successfully!")
+        except Exception as e:
+            st.error(f"Error downloading model: {str(e)}")
+    return model_path
+
 def load_model():
     """Load the trained model"""
+    model_path = download_model()
     try:
-        model = tf.keras.models.load_model('models/best_efficientnet_final.keras')
+        model = tf.keras.models.load_model(model_path)
         return model
     except Exception as e:
         st.error(f"Error loading model: {str(e)}")
@@ -112,7 +132,7 @@ def get_prediction(model, _image):
         st.error(f"Error during prediction: {str(e)}")
         return None
 
-# class names
+# Class names and descriptions
 CLASS_NAMES = ['Aphid', 'Yellow Rust', 'Fusarium Head Blight', 'Mildew', 'Healthy']
 CLASS_DESCRIPTIONS = {
     'Aphid': 'Small sap-sucking insects that can cause significant damage to wheat crops.',
@@ -131,7 +151,6 @@ def main():
         st.markdown("- 📊 View prediction results")
         st.markdown("- 🌾 Learn about diseases")
         
-        # disease information in sidebar
         st.markdown("---")
         st.markdown("### Disease Information")
         for class_name, description in CLASS_DESCRIPTIONS.items():
